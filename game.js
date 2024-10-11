@@ -5,7 +5,7 @@ context.scale(20, 20);
 
 function arenaSweep() {
     let rowCount = 1;
-    outer: for (let y = arena.length - 1; y > 0; --y) {
+    outer: for (let y = arena.length - 1; y >= 0; --y) {
         for (let x = 0; x < arena[y].length; ++x) {
             if (arena[y][x] === 0) {
                 continue outer;
@@ -16,7 +16,7 @@ function arenaSweep() {
         arena.unshift(row);
         ++y;
 
-        player.score += rowCount * 10;
+        player.score += rowCount * 100; // Score verhogen met 100 per rij
         rowCount *= 2;
     }
 }
@@ -26,8 +26,7 @@ function collide(arena, player) {
     for (let y = 0; y < m.length; ++y) {
         for (let x = 0; x < m[y].length; ++x) {
             if (m[y][x] !== 0 &&
-                (arena[y + o.y] &&
-                 arena[y + o.y][x + o.x]) !== 0) {
+                (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
                 return true;
             }
         }
@@ -72,7 +71,6 @@ function createPiece(type) {
             [0, 0, 0, 0],
             [1, 1, 1, 1],
             [0, 0, 0, 0],
-            [0, 0, 0, 0],
         ];
     } else if (type === 'S') {
         return [
@@ -93,20 +91,16 @@ function drawMatrix(matrix, offset) {
     matrix.forEach((row, y) => {
         row.forEach((value, x) => {
             if (value !== 0) {
-                context.fillStyle = 'red';
-                context.fillRect(x + offset.x,
-                                 y + offset.y,
-                                 1, 1);
+                context.fillStyle = 'red'; // Kleur van de blokken
+                context.fillRect(x + offset.x, y + offset.y, 1, 1);
             }
         });
     });
 }
 
 function draw() {
-    context.fillStyle = '#000';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    drawMatrix(arena, {x: 0, y: 0});
+    context.clearRect(0, 0, canvas.width, canvas.height); // Canvas leegmaken
+    drawMatrix(arena, { x: 0, y: 0 });
     drawMatrix(player.matrix, player.pos);
 }
 
@@ -161,10 +155,9 @@ function playerMove(dir) {
 
 function playerReset() {
     const pieces = 'ILJOTSZ';
-    player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
+    player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
     player.pos.y = 0;
-    player.pos.x = (arena[0].length / 2 | 0) -
-                   (player.matrix[0].length / 2 | 0);
+    player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
 
     if (collide(arena, player)) {
         arena.forEach(row => row.fill(0));
@@ -206,27 +199,27 @@ function update(time = 0) {
 }
 
 function updateScore() {
-    document.getElementById('score').innerText = player.score;
+    document.getElementById('score').innerText = `Score: ${player.score}`;
 }
 
 const arena = createMatrix(12, 20);
 
 const player = {
-    pos: {x: 0, y: 0},
+    pos: { x: 0, y: 0 },
     matrix: null,
     score: 0,
 };
 
 document.addEventListener('keydown', event => {
-    if (event.keyCode === 37) {
+    if (event.key === 'ArrowLeft') {
         playerMove(-1);
-    } else if (event.keyCode === 39) {
+    } else if (event.key === 'ArrowRight') {
         playerMove(1);
-    } else if (event.keyCode === 40) {
+    } else if (event.key === 'ArrowDown') {
         playerDrop();
-    } else if (event.keyCode === 81) {
+    } else if (event.key === 'q') {
         playerRotate(-1);
-    } else if (event.keyCode === 87) {
+    } else if (event.key === 'w') {
         playerRotate(1);
     }
 });
