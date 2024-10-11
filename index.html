@@ -1,37 +1,19 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Klik Spel</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
-        }
-        button {
-            padding: 20px;
-            font-size: 24px;
-        }
-    </style>
+    <title>Complex Browser Game</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div>
-        <h1>Klik op de knop!</h1>
-        <button id="clickButton">Klik hier!</button>
-        <p id="score">Score: 0</p>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div id="hud">
+            <p id="score">Score: 0</p>
+            <p id="health">Health: 100</p>
+        </div>
     </div>
-
-    <script>
-        let score = 0;
-
-        document.getElementById('clickButton').addEventListener('click', function() {
-            score++;
-            document.getElementById('score').innerText = 'Score: ' + score;
-        });
-    </script>
+    <script src="game.js"></script>
 </body>
 </html>
